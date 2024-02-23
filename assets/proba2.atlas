@@ -1,0 +1,34 @@
+
+proba2.png
+size: 2048, 512
+format: RGBA8888
+filter: Nearest, Nearest
+repeat: none
+afk
+  rotate: false
+  xy: 1284, 252
+  size: 640, 128
+  orig: 640, 128
+  offset: 0, 0
+  index: -1
+afk2
+  rotate: false
+  xy: 2, 254
+  size: 1280, 256
+  orig: 1280, 256
+  offset: 0, 0
+  index: -1
+jump
+  rotate: false
+  xy: 1284, 382
+  size: 640, 128
+  orig: 640, 128
+  offset: 0, 0
+  index: -1
+walk2
+  rotate: false
+  xy: 2, 2
+  size: 1200, 250
+  orig: 1200, 250
+  offset: 0, 0
+  index: -1
