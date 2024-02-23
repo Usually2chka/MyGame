@@ -3,6 +3,7 @@ package com.mygdx.game.Screens;
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.InputProcessor;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -34,7 +35,7 @@ import com.mygdx.game.Sprites.Hero;
 import com.mygdx.game.Tools.B2WorldCreator;
 
 
-public class PlayScreen implements Screen {
+public class PlayScreen implements Screen, InputProcessor {
 
     private MyGdxGame game;
     private TextureAtlas atlas;
@@ -56,29 +57,23 @@ public class PlayScreen implements Screen {
 
     public PlayScreen(MyGdxGame game)
     {
-        atlas = new TextureAtlas("justHero.atlas");
+        atlas = new TextureAtlas("proba2.atlas"); //justHero.atlas
 
         this.game = game;
-        gameCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //gameCam = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
-        //gameCam.translate(1000000000, gameCam.viewportHeight / 2 * MyGdxGame.PPM);
-        gamePort = new FillViewport(MyGdxGame.V_WIDTH / MyGdxGame.PPM,MyGdxGame.V_HEIGHT / MyGdxGame.PPM, gameCam);// поле видимости нашего персонажа
-        //gamePort
-        //gamePort = new ScalingViewport(Scaling.stretch, 2500 / MyGdxGame.PPM, 1080 / MyGdxGame.PPM, gameCam);
-        //gamePort = new ScreenViewport(gameCam);
-        //gamePort = new StretchViewport(1800 / MyGdxGame.PPM, 1000 / MyGdxGame.PPM, gameCam);
+        gameCam = new OrthographicCamera();
 
+        gamePort = new FillViewport(MyGdxGame.V_WIDTH / MyGdxGame.PPM,MyGdxGame.V_HEIGHT / MyGdxGame.PPM, gameCam);// поле видимости нашего персонажа
 
         hud = new Hud(game.batch);
 
         mapLoader = new TmxMapLoader();
-        map = mapLoader.load("withBackground.tmx");
+        map = mapLoader.load("TmxPr2.tmx");
 
         renderer = new OrthogonalTiledMapRenderer(map, 1 / MyGdxGame.PPM);
-        gameCam.position.set(gamePort.getScreenWidth() , gamePort.getScreenHeight() , 0);
+        gameCam.position.set(gamePort.getScreenWidth() / 2 , gamePort.getScreenHeight() / 2 , 0);
 
         world = new World(new Vector2(0, -10), true);
-        //world
+
         b2dr = new Box2DDebugRenderer();
 
         new B2WorldCreator(world, map);
@@ -97,35 +92,61 @@ public class PlayScreen implements Screen {
 
     }
 
+    //В движении нужно реализовать многопоточность, чтобы прыжок + бег могли быть параллельными, а так же пофиксить баг с прыжками
+    public void jumpHandleInput(float dt)
+    {
+        //short countJump;
+        Thread thread = new Thread(() ->
+        {
+
+        });
+        thread.start();
+
+    }
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
+        return false;
+    }
     public void handleInput(float dt)
     {
-
         //Сорость передвижение, а так же само передвижение (Для мобилок надо переделать)
-        if((Gdx.input.isKeyJustPressed(Input.Keys.UP)))
-            player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
-        if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) || ((MyGdxGame.V_WIDTH ) / 2 < Gdx.input.getX()))
-            if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().x <= 2))
-                player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-        if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) || ((MyGdxGame.V_WIDTH ) / 2 > Gdx.input.getX()))
-            if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().x >= -2))
-                player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-
+        //Thread jump = new Thread(() ->
+        //{
+            if((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || ((gamePort.getScreenHeight() / 2.3) < Gdx.input.getY()))
+                if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().y <= 3)))
+                    player.b2body.applyLinearImpulse(new Vector2(0, 2f), player.b2body.getWorldCenter(), true);
+        //});
+        //Thread walk = new Thread(() ->
+        //{
+            if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) || (((gamePort.getScreenWidth()) / 2 < Gdx.input.getX()) && !((gamePort.getScreenHeight() / 2.3) < Gdx.input.getY())))
+                if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().x <= 2))
+                    player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+            if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) || (((gamePort.getScreenWidth()) / 2 > Gdx.input.getX()) && !((gamePort.getScreenHeight() / 2.3) < Gdx.input.getY())))
+                if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().x >= -2))
+                    player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+        //});
+        //jump.start();
+        //walk.start();
 
     }
 
     public void update(float dt)
     {
+        //jumpHandleInput(dt);
         handleInput(dt);
 
         world.step(1/60f, 6, 2);
 
         player.update(dt);
 
-        gameCam.position.y = player.b2body.getPosition().y;
-        gameCam.position.x = player.b2body.getPosition().x;
+        gameCam.position.y = player.b2body.getPosition().y + (75 / MyGdxGame.PPM);
+        gameCam.position.x = player.b2body.getPosition().x + (100 / MyGdxGame.PPM);
 
         gameCam.update();
+
         renderer.setView(gameCam);
+
     }
 
     @Override
@@ -133,7 +154,6 @@ public class PlayScreen implements Screen {
         update(delta);
         Gdx.gl.glClearColor(0, 0, 0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-
         renderer.render();
 
         b2dr.render(world, gameCam.combined);
@@ -175,5 +195,42 @@ public class PlayScreen implements Screen {
         world.dispose();
         b2dr.dispose();
         hud.dispose();
+    }
+
+    @Override
+    public boolean keyDown(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyUp(int keycode) {
+        return false;
+    }
+
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+
+    @Override
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        return false;
+    }
+
+
+
+    @Override
+    public boolean touchDragged(int screenX, int screenY, int pointer) {
+        return false;
+    }
+
+    @Override
+    public boolean mouseMoved(int screenX, int screenY) {
+        return false;
+    }
+
+    @Override
+    public boolean scrolled(float amountX, float amountY) {
+        return false;
     }
 }
