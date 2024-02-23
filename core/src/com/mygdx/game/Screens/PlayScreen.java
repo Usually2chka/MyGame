@@ -52,7 +52,6 @@ public class PlayScreen implements Screen, InputProcessor {
     private World world;
     private Box2DDebugRenderer b2dr;
 
-
     private Hero player;
 
     public PlayScreen(MyGdxGame game)
@@ -79,6 +78,8 @@ public class PlayScreen implements Screen, InputProcessor {
         new B2WorldCreator(world, map);
 
         player = new Hero(world, this);
+
+        Gdx.input.setInputProcessor(this);
     }
 
     public TextureAtlas getAtlas()
@@ -91,50 +92,30 @@ public class PlayScreen implements Screen, InputProcessor {
     public void show() {
 
     }
-
-    //В движении нужно реализовать многопоточность, чтобы прыжок + бег могли быть параллельными, а так же пофиксить баг с прыжками
-    public void jumpHandleInput(float dt)
-    {
-        //short countJump;
-        Thread thread = new Thread(() ->
-        {
-
-        });
-        thread.start();
-
-    }
     @Override
-    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
-
+    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
+        if(((screenX < gamePort.getScreenWidth() / 2) && player.b2body.getLinearVelocity().x >= -2) && Gdx.input.isTouched())
+            player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
+        if(((screenX > gamePort.getScreenWidth() / 2) && player.b2body.getLinearVelocity().x <= 2) && Gdx.input.isTouched())
+            player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+        if(((screenY > gamePort.getScreenHeight() / 2.3) && player.b2body.getLinearVelocity().y <= 3) && Gdx.input.isTouched())
+            player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
         return false;
     }
-    public void handleInput(float dt)
+    public void handleInput(float dt) //for pc
     {
-        //Сорость передвижение, а так же само передвижение (Для мобилок надо переделать)
-        //Thread jump = new Thread(() ->
-        //{
-            if((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || ((gamePort.getScreenHeight() / 2.3) < Gdx.input.getY()))
-                if (((Gdx.input.isKeyJustPressed(Input.Keys.UP)) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().y <= 3)))
-                    player.b2body.applyLinearImpulse(new Vector2(0, 2f), player.b2body.getWorldCenter(), true);
-        //});
-        //Thread walk = new Thread(() ->
-        //{
-            if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) || (((gamePort.getScreenWidth()) / 2 < Gdx.input.getX()) && !((gamePort.getScreenHeight() / 2.3) < Gdx.input.getY())))
-                if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().x <= 2))
-                    player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-            if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) || (((gamePort.getScreenWidth()) / 2 > Gdx.input.getX()) && !((gamePort.getScreenHeight() / 2.3) < Gdx.input.getY())))
-                if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2) || (Gdx.input.isTouched() && player.b2body.getLinearVelocity().x >= -2))
-                    player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-        //});
-        //jump.start();
-        //walk.start();
-
+        if((Gdx.input.isKeyJustPressed(Input.Keys.UP)))
+            player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+        if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2))
+            player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+        if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2))
+            player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
     }
 
     public void update(float dt)
     {
-        //jumpHandleInput(dt);
         handleInput(dt);
+        touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0);
 
         world.step(1/60f, 6, 2);
 
@@ -201,24 +182,10 @@ public class PlayScreen implements Screen, InputProcessor {
     public boolean keyDown(int keycode) {
         return false;
     }
-
     @Override
     public boolean keyUp(int keycode) {
         return false;
     }
-
-    @Override
-    public boolean keyTyped(char character) {
-        return false;
-    }
-
-    @Override
-    public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        return false;
-    }
-
-
-
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
         return false;
@@ -231,6 +198,15 @@ public class PlayScreen implements Screen, InputProcessor {
 
     @Override
     public boolean scrolled(float amountX, float amountY) {
+        return false;
+    }
+    @Override
+    public boolean keyTyped(char character) {
+        return false;
+    }
+    @Override
+    public boolean touchUp(int screenX, int screenY, int pointer, int button) {
+
         return false;
     }
 }
