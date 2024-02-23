@@ -53,7 +53,10 @@ public class PlayScreen implements Screen, InputProcessor {
     private Box2DDebugRenderer b2dr;
 
     private Hero player;
+
     private static int jump = 0;
+
+
 
     public PlayScreen(MyGdxGame game)
     {
@@ -95,9 +98,9 @@ public class PlayScreen implements Screen, InputProcessor {
     }
     @Override
     public boolean touchDown(int screenX, int screenY, int pointer, int button) {
-        if(((screenX < gamePort.getScreenWidth() / 2) && player.b2body.getLinearVelocity().x >= -2) && Gdx.input.isTouched())
+        if(((screenX < gamePort.getScreenWidth() / 2) && player.b2body.getLinearVelocity().x >= -1.5) && Gdx.input.isTouched())
             player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
-        if(((screenX > gamePort.getScreenWidth() / 2) && player.b2body.getLinearVelocity().x <= 2) && Gdx.input.isTouched())
+        if(((screenX > gamePort.getScreenWidth() / 2) && player.b2body.getLinearVelocity().x <= 1.5) && Gdx.input.isTouched())
             player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
         if(((screenY > gamePort.getScreenHeight() / 2.3) && player.b2body.getLinearVelocity().y <= 3) && Gdx.input.isTouched() && jump < 2)
         {

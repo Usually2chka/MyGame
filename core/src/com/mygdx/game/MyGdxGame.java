@@ -1,10 +1,8 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
-import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.mygdx.game.Screens.PlayScreen;
-import com.mygdx.game.Screens.Try;
 
 public class MyGdxGame extends Game {
 	public static final int V_WIDTH = 600;
