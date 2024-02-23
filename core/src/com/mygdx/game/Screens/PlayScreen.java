@@ -53,6 +53,7 @@ public class PlayScreen implements Screen, InputProcessor {
     private Box2DDebugRenderer b2dr;
 
     private Hero player;
+    private static int jump = 0;
 
     public PlayScreen(MyGdxGame game)
     {
@@ -98,14 +99,22 @@ public class PlayScreen implements Screen, InputProcessor {
             player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
         if(((screenX > gamePort.getScreenWidth() / 2) && player.b2body.getLinearVelocity().x <= 2) && Gdx.input.isTouched())
             player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
-        if(((screenY > gamePort.getScreenHeight() / 2.3) && player.b2body.getLinearVelocity().y <= 3) && Gdx.input.isTouched())
+        if(((screenY > gamePort.getScreenHeight() / 2.3) && player.b2body.getLinearVelocity().y <= 3) && Gdx.input.isTouched() && jump < 2)
+        {
             player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+            jump++;
+        }
+
+
         return false;
     }
     public void handleInput(float dt) //for pc
     {
-        if((Gdx.input.isKeyJustPressed(Input.Keys.UP)))
+        if(Gdx.input.isKeyJustPressed(Input.Keys.UP) && jump < 2)
+        {
             player.b2body.applyLinearImpulse(new Vector2(0, 4f), player.b2body.getWorldCenter(), true);
+            jump++;
+        }
         if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2))
             player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
         if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2))
@@ -114,6 +123,8 @@ public class PlayScreen implements Screen, InputProcessor {
 
     public void update(float dt)
     {
+        if(player.b2body.getLinearVelocity().y == 0)
+            jump = 0;
         handleInput(dt);
         touchDown(Gdx.input.getX(), Gdx.input.getY(), 0, 0);
 
