@@ -1,0 +1,11 @@
+animation.png
+size:8192,256
+repeat:none
+afk
+bounds:2052,68,1408,128
+jump
+bounds:2,2,320,64
+jump2
+bounds:2,68,2048,128
+run
+bounds:3462,68,1408,128

@@ -10,6 +10,13 @@ public class MyGdxGame extends Game {
 	public static final float PPM = 100;
 	public SpriteBatch batch;
 
+	public boolean heroIsDead;
+
+	public boolean isDead()
+	{
+		return heroIsDead;
+	}
+
 	@Override
 	public void create () {
 		batch = new SpriteBatch();

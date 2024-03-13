@@ -39,7 +39,7 @@ public class Hero extends Sprite {
 
     public Hero(World world, PlayScreen screen)
     {
-        super(screen.getAtlas().findRegion("walk2"));//
+        super(screen.getAtlas().findRegion("run"));//
         this.world = world;
         currentState = State.STANDING;
         previousState = State.STANDING;
@@ -48,18 +48,19 @@ public class Hero extends Sprite {
 
         Array<TextureRegion> frames = new Array<>();
         //RUN
-        for(int i = 1; i < 10; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("walk2"), i * 100, 0, 100, 250));
+        for(int i = 0; i < 11; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("run"), i * 128, 0, 128, 128));
         heroRun = new Animation(0.1f, frames);
         frames.clear();
         //AFK
-        for(int i = 1; i < 5; i++)
+        for(int i = 0; i < 11; i++)
             frames.add(new TextureRegion(screen.getAtlas().findRegion("afk"), i * 128, 0, 128, 128 ));
         heroStand = new Animation(0.1f, frames);
         frames.clear();
         //JUMP
-        for(int i = 1; i < 5; i++)
-            frames.add(new TextureRegion(screen.getAtlas().findRegion("jump"), i * 128, 0, 128, 128 ));
+        for(int i = 0; i < 16; i++)
+            frames.add(new TextureRegion(screen.getAtlas().findRegion("jump2"), i * 128, 0, 128, 128 ));
+        //frames.add(new TextureRegion(screen.getAtlas().findRegion("jump"), i * 64, 0, 64, 64 ));
         heroJump = new Animation(0.1f, frames);
         frames.clear();
 
