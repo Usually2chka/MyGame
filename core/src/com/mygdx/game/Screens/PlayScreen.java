@@ -95,13 +95,12 @@ public class PlayScreen implements Screen, InputProcessor {
 
         rayHandler = new RayHandler(world);
         rayHandler.setAmbientLight(.5f);
-        myLight = new PointLight(rayHandler, 100, Color.WHITE, 1 / PPM, 0, 0);
-        myLight.setSoftnessLength(0f);
-        myLight.setStaticLight(false);
+        //myLight = new PointLight(rayHandler, 1000, Color.WHITE, 100, 0, 0);
+        //myLight.setSoftnessLength(0f);
+        //myLight.setStaticLight(false);
 
-//        myLight.attachToBody(null, 0, 0);
 
-        myLight.attachToBody(player.b2body, 0, 0);
+        //myLight.attachToBody(player.b2body, 0, 0);
         //myLight.
     }
 
@@ -182,20 +181,20 @@ public class PlayScreen implements Screen, InputProcessor {
         b2dr.render(world, gameCam.combined);
         game.batch.begin();
 
-        game.batch.setProjectionMatrix(gameCam.combined);
-        rayHandler.setCombinedMatrix(gameCam.combined.cpy().scl(PPM));
         player.draw(game.batch);
 //        if(myLight.getBody() != null)
 //            myLight.setPosition(player.b2body.getPosition());
         game.batch.end();
 
-        game.batch.setProjectionMatrix(hud.stage.getCamera().combined);
-
+        //rayHandler.updateAndRender();
+        //game.batch.setProjectionMatrix(gameCam.combined);
+        //rayHandler.setCombinedMatrix(gameCam.combined.cpy().scl(PPM));
+        game.batch.setProjectionMatrix(gameCam.combined);
         hud.stage.draw();
-        rayHandler.updateAndRender();
 
-        System.out.println("PLR: " + player.b2body.getPosition());
-        System.out.println("LGT: " + myLight.getBody().getPosition());
+
+        //System.out.println("PLR: " + player.b2body.getPosition());
+        //System.out.println("LGT: " + myLight.getBody().getPosition());
 
 
 
