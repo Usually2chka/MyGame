@@ -2,11 +2,12 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.mygdx.game.Screens.ChooseSkinScreen;
 import com.mygdx.game.Screens.PlayScreen;
 
 public class MyGdxGame extends Game {
-	public static final int V_WIDTH = 600;
-	public static final int V_HEIGHT = 500; //1280х960
+	public static final int V_WIDTH = 800; //600
+	public static final int V_HEIGHT = 400; //1280х960 //500
 	public static final float PPM = 100;
 	public SpriteBatch batch;
 
@@ -21,7 +22,7 @@ public class MyGdxGame extends Game {
 	public void create () {
 		batch = new SpriteBatch();
 		setScreen(new PlayScreen(this));
-
+		//setScreen(new ChooseSkinScreen(this));
 		//setScreen(new Try(this));
 	}
 
