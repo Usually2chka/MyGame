@@ -1,6 +1,8 @@
 package com.mygdx.game.Screens;
 
 import static com.mygdx.game.MyGdxGame.PPM;
+import static com.mygdx.game.MyGdxGame.V_HEIGHT;
+import static com.mygdx.game.MyGdxGame.V_WIDTH;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
@@ -26,6 +28,7 @@ import com.badlogic.gdx.physics.box2d.Box2DDebugRenderer;
 import com.badlogic.gdx.physics.box2d.FixtureDef;
 import com.badlogic.gdx.physics.box2d.PolygonShape;
 import com.badlogic.gdx.physics.box2d.World;
+import com.badlogic.gdx.scenes.scene2d.Stage;
 import com.badlogic.gdx.utils.Scaling;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.badlogic.gdx.utils.viewport.FitViewport;
@@ -46,8 +49,6 @@ public class PlayScreen implements Screen, InputProcessor {
 
     private MyGdxGame game;
     private TextureAtlas atlas;
-
-
     private Hud hud;
     private OrthographicCamera gameCam;
     private Viewport gamePort;
@@ -94,14 +95,15 @@ public class PlayScreen implements Screen, InputProcessor {
         Gdx.input.setInputProcessor(this);
 
         rayHandler = new RayHandler(world);
-        rayHandler.setAmbientLight(.5f);
-        //myLight = new PointLight(rayHandler, 1000, Color.WHITE, 100, 0, 0);
-        //myLight.setSoftnessLength(0f);
-        //myLight.setStaticLight(false);
+        rayHandler.setAmbientLight(0.5f);
+
+        myLight = new PointLight(rayHandler, 1000, Color.WHITE, 1.5f, 0, 0);
+        myLight.setSoft(true);
+        myLight.setSoftnessLength(0f);
+        myLight.setStaticLight(false);
 
 
-        //myLight.attachToBody(player.b2body, 0, 0);
-        //myLight.
+        myLight.attachToBody(player.b2body, 0, 0);
     }
 
     public TextureAtlas getAtlas()
@@ -153,22 +155,12 @@ public class PlayScreen implements Screen, InputProcessor {
 
         player.update(dt);
 
-
-        //myLight.attachToBody(null, player.b2body.getPosition().x, player.b2body.getPosition().y);
-
         gameCam.position.y = player.b2body.getPosition().y + (75 / PPM);
         gameCam.position.x = player.b2body.getPosition().x + (100 / PPM);
-        //myLight = new PointLight(rayHandler, 100, Color.WHITE, 1 / PPM, player.b2body.getPosition().x, player.b2body.getPosition().y);
-
-        //myLight.attachToBody(player.b2body, player.b2body.getPosition().x, player.b2body.getPosition().x);
-
 
         gameCam.update();
 
         renderer.setView(gameCam);
-
-
-        //rayHandler.setCombinedMatrix(gameCam.combined.cpy().scl(PPM));
     }
 
     @Override
@@ -177,27 +169,16 @@ public class PlayScreen implements Screen, InputProcessor {
         Gdx.gl.glClearColor(0,0,0, 0);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
-
+        rayHandler.updateAndRender();
         b2dr.render(world, gameCam.combined);
-        game.batch.begin();
 
-        player.draw(game.batch);
-//        if(myLight.getBody() != null)
-//            myLight.setPosition(player.b2body.getPosition());
-        game.batch.end();
+        game.batch.begin(); //начало------------------------------------------
 
-        //rayHandler.updateAndRender();
-        //game.batch.setProjectionMatrix(gameCam.combined);
-        //rayHandler.setCombinedMatrix(gameCam.combined.cpy().scl(PPM));
         game.batch.setProjectionMatrix(gameCam.combined);
-        hud.stage.draw();
+        player.draw(game.batch);
+        rayHandler.setCombinedMatrix(gameCam.combined, 0, 0, V_WIDTH, V_HEIGHT);
 
-
-        //System.out.println("PLR: " + player.b2body.getPosition());
-        //System.out.println("LGT: " + myLight.getBody().getPosition());
-
-
-
+        game.batch.end(); //конец-------------------------------------------
     }
 
     @Override
