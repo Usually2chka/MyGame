@@ -23,7 +23,9 @@ import com.badlogic.gdx.utils.viewport.Viewport;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Scenes.Hud;
 import com.mygdx.game.Sprites.Hero;
+import com.mygdx.game.Sprites.WinObject;
 import com.mygdx.game.Tools.B2WorldCreator;
+import com.mygdx.game.Tools.WorldContactListener;
 
 import box2dLight.PointLight;
 import box2dLight.RayHandler;
@@ -50,10 +52,11 @@ public class PlayScreen implements Screen, InputProcessor {
     private static int jump = 0;
 
 
-
     public PlayScreen(MyGdxGame game)
     {
         atlas = new TextureAtlas("animation.atlas"); //justHero.atlas
+
+        //
 
         this.game = game;
         gameCam = new OrthographicCamera();
@@ -75,6 +78,8 @@ public class PlayScreen implements Screen, InputProcessor {
         new B2WorldCreator(world, map);
 
         player = new Hero(world, this);
+
+        world.setContactListener(new WorldContactListener());
 
         Gdx.input.setInputProcessor(this);
 
@@ -120,7 +125,7 @@ public class PlayScreen implements Screen, InputProcessor {
             jump++;
         }
         if((Gdx.input.isKeyPressed(Input.Keys.RIGHT) && player.b2body.getLinearVelocity().x <= 2))
-            player.b2body.applyLinearImpulse(new Vector2(0.1f, 0), player.b2body.getWorldCenter(), true);
+            player.b2body.applyLinearImpulse(new Vector2(20f, 0), player.b2body.getWorldCenter(), true); //0.1
         if((Gdx.input.isKeyPressed(Input.Keys.LEFT) && player.b2body.getLinearVelocity().x >= -2))
             player.b2body.applyLinearImpulse(new Vector2(-0.1f, 0), player.b2body.getWorldCenter(), true);
     }
@@ -144,6 +149,9 @@ public class PlayScreen implements Screen, InputProcessor {
         gameCam.update();
 
         renderer.setView(gameCam);
+
+
+        //nextLvl();
     }
 
     @Override
@@ -162,6 +170,13 @@ public class PlayScreen implements Screen, InputProcessor {
         rayHandler.setCombinedMatrix(gameCam.combined, 0, 0, V_WIDTH, V_HEIGHT);
 
         game.batch.end(); //конец-------------------------------------------
+    }
+
+    public void nextLvl()
+    {
+        //if (player.b2body.getPosition().x == )
+            game.setScreen(new DiedScreen(game));
+        //return false;
     }
 
     @Override

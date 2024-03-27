@@ -4,6 +4,7 @@ import static com.mygdx.game.MyGdxGame.PPM;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.Preferences;
 import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
@@ -22,12 +23,16 @@ import com.mygdx.game.Sprites.Hero;
 public class DiedScreen implements Screen {
     private Viewport viewport;
     private Stage stage;
-
+    private int score;
     public Game game;
 
     public DiedScreen(Game game)
     {
         this.game = game;
+
+        Preferences prefs = Gdx.app.getPreferences("liba2");
+        //this.game
+
         viewport = new FitViewport(MyGdxGame.V_WIDTH, MyGdxGame.V_HEIGHT, new OrthographicCamera());
         stage = new Stage(viewport, ((MyGdxGame) game).batch);
         Label.LabelStyle font = new Label.LabelStyle(new BitmapFont(), Color.WHITE);

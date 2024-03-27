@@ -137,7 +137,16 @@ public class Hero extends Sprite {
 
         CircleShape shape = new CircleShape();
         shape.setRadius(15 / MyGdxGame.PPM); //6 or 5.5
+
+        fixtureDef.filter.categoryBits = MyGdxGame.HERO_BIT;
+        fixtureDef.filter.maskBits = MyGdxGame.DEFAULT_BIT | MyGdxGame.WINOBJECT_BIT;
+
         fixtureDef.shape = shape;
         b2body.createFixture(fixtureDef);
+
+
+        fixtureDef.isSensor = true;
+
+        b2body.createFixture(fixtureDef).setUserData("hero");
     }
 }
