@@ -37,8 +37,8 @@ public class ChooseSkinScreen implements Screen, InputProcessor {
     private Sprite buttonUp;
     private Sprite buttonDown;
 
-
-    private Viewport gamePort;
+    private Viewport scroll;
+    private Viewport main;
     private static int amount;
 
     private static final int SIZE_BUTTONS = 200;
@@ -66,20 +66,21 @@ public class ChooseSkinScreen implements Screen, InputProcessor {
         buttonUp.setPosition(10,10);
         buttonDown.setPosition(1, 1);
 
-        viewport = new FitViewport(V_WIDTH, V_HEIGHT, new OrthographicCamera());
-        stage = new Stage(viewport, ((MyGdxGame) game).batch);
+        main = new FitViewport(V_WIDTH / PPM, V_HEIGHT / PPM, new OrthographicCamera());
+
+        stage = new Stage(main, ((MyGdxGame) game).batch);
 
         Gdx.input.setInputProcessor(this);
     }
     @Override
     public boolean touchDragged(int screenX, int screenY, int pointer) {
 
-        if (((screenY < viewport.getScreenHeight() / 2 ) && (amount > -40) && Gdx.input.isTouched())) {
+        if (((screenY < main.getScreenHeight() / 2 ) && (amount > -40) && Gdx.input.isTouched())) {
             sprite.translate(0, -5f);
             amount--;
         }
         //Спуск вниз
-        if  ((screenY > viewport.getScreenHeight() / 2) && (amount < 40) && Gdx.input.isTouched()) {
+        if  ((screenY > main.getScreenHeight() / 2) && (amount < 40) && Gdx.input.isTouched()) {
             sprite.translate(0, 5f);
             amount++;
         }
@@ -119,8 +120,8 @@ public class ChooseSkinScreen implements Screen, InputProcessor {
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         batch.begin();
         batch.draw(sprite, sprite.getX(), sprite.getY());
-        batch.draw(buttonDown, buttonDown.getX(), buttonDown.getY());
-        batch.draw(buttonUp, buttonUp.getX(), buttonUp.getY());
+        //batch.draw(buttonDown, buttonDown.getX(), buttonDown.getY());
+        //batch.draw(buttonUp, buttonUp.getX(), buttonUp.getY());
         batch.end();
 
         //touchDragged(Gdx.input.getX(), Gdx.input.getY(), 0);

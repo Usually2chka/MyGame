@@ -149,8 +149,8 @@ public class PlayScreen implements Screen, InputProcessor {
     @Override
     public void render(float delta) {
         update(delta);
-        Gdx.gl.glClearColor(0,0,0, 0);
-        Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        //Gdx.gl.glClearColor(0,0,0, 0);
+        //Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         renderer.render();
         rayHandler.updateAndRender();
         b2dr.render(world, gameCam.combined);
